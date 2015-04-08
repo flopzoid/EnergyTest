@@ -1,0 +1,48 @@
+@{ 
+var Name=""; var ProductNum = ""; var Color = ""; var Cost =""; var Price = "";    
+if(IsPost){
+  var writedb = Database.Open("WriteProductstoSQLDB");
+  Name = Request.Form["Name"]; ProductNum = Request.Form["ProductNum"]; Color = Request.Form["Color"]; Cost = Request.Form["Cost"]; Price = Request.Form["Price"];
+  var insertCommand = "INSERT INTO SalesLT.Product (Name,ProductNumber,Color,StandardCost,ListPrice,SellStartDate,rowguid,ModifiedDate) Values(@0,@1,@2,@3,@4,@5,@6,@7)";
+  writedb.Execute(insertCommand, Name, ProductNum, Color, Cost, Price, System.DateTime.Now, Guid.NewGuid(), System.DateTime.Now);
+  Name = "";  ProductNum = "";  Color = "";  Cost ="";  Price = "";
+  writedb.Close();}
+var readdb = Database.Open("ReadProductsfromSQLDB");
+var productlist = readdb.Query("SELECT [ProductID],[Name],[ProductNumber],[Color],[StandardCost],[ListPrice],[ModifiedDate] FROM [SalesLT].[Product] ORDER BY ModifiedDate DESC");
+readdb.Close();
+}
+<html>
+<head>
+  <title>EAST-US: Products</title>
+  <style>
+    body{line-height: 1.6em; font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;font-size: 18px; color:Indigo; background: LightGrey; margin: 0px; border:0px; padding:0px}
+    #tab{font-size: 12px;margin: 5px;text-align: left;border-collapse: collapse;}
+    #tab th{font-size: 13px; font-weight: normal;padding: 8px; color: white;background: Indigo;border-top: 2px solid #d3ddff;border-bottom: 1px solid #fff;text-align: left;}
+    #tab td{padding: 8px;border-bottom: 1px solid #fff;       color: #669;border-top: 1px solid #fff;    background: linear-gradient(Azure, Thistle)}
+    #tab tbody tr:hover td{background: linear-gradient(LightGrey,DarkGrey); color:yellow}
+    h1 {color:white; padding: 5px; }
+    header {background:url(http://<alias>webstorage.blob.core.windows.net/images/header.png) no-repeat}
+  </style> 
+</head>
+<body onload="document.addrec.Name.focus();">
+<header>
+<h1>EAST-US: Products</h1>    
+<div id="labels" style="font-size:12px; position:relative; top:10px; left:98px; color:white">Product Name<span style="margin-left:136px;">Product Number</span><span style="margin-left:18px;">Color</span><Span style="margin-left:55px;">Cost</Span><Span style="margin-left:72px;">Price</Span></div>
+<form name="addrec" method="post" action="">
+  <input type="text" name="Name" value="@Name" style="width:210px; margin-left:95px;" />
+  <input type="text" name="ProductNum" value="@ProductNum" style="width:110px;" />
+  <input type="text" name="Color" value="@Color" style="width:80px;" />
+  <input type="text" name="Cost" value="@Cost" style="width:90px;" />
+  <input type="text" name="Price" value="@Price" style="width:90px;" />
+  <input type="submit" name="buttonSubmit" value="Add" />
+</form>
+</header>
+   <table id="tab">            
+    <thead><tr><th>Product ID</th><th>Product Name</th><th>Product Number</th><th>Color</th><th>Standard Cost</th><th>List Price</th><th>Date Modified</th></tr></thead>
+    <tbody>
+     @foreach(var Item in productlist)
+     {<tr><td>@Item.ProductID</td><td>@Item.Name</td><td>@Item.ProductNumber</td><td>@Item.Color</td><td>@Item.StandardCost</td><td>@Item.ListPrice</td><td>@Item.ModifiedDate</td></tr>}
+     </tbody>
+  </table>
+</body>
+</html>

@@ -1,0 +1,27 @@
+@{ 
+var db = Database.Open("ReadProductsfromSQLDB");
+var productlist = db.Query("SELECT [ProductID],[Name],[ProductNumber],[Color],[StandardCost],[ListPrice],[ModifiedDate] FROM [SalesLT].[Product] ORDER BY ModifiedDate DESC");
+}
+<html>
+<head>
+  <title>WEST-US:Products</title>
+  <style>
+    body{line-height: 1.6em; font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;font-size: 18px;color:Indigo; background: LightGrey; margin: 0px; border:0px; padding:0px}
+    #tab{font-size: 12px;margin: 5px;text-align: left;border-collapse: collapse;}
+    #tab th{font-size: 13px; font-weight: normal;padding: 8px; color: white;background: Indigo;border-top: 2px solid #d3ddff;border-bottom: 1px solid #fff;text-align: left;}
+    #tab td{padding: 8px;border-bottom: 1px solid #fff;       color: #669;border-top: 1px solid #fff; background: linear-gradient(Azure, Thistle)}
+    #tab tbody tr:hover td{background: linear-gradient(LightGrey,DarkGrey); color:yellow}
+    h1 {color:white; padding: 5px; height:100px; background:url(http://<alias>webstorage.blob.core.windows.net/images/header.png) no-repeat}  
+  </style> 
+</head>
+<body>
+<h1>WEST-US: Products</h1>
+   <table id="tab">            
+    <thead><tr><th>Product ID</th><th>Product Name</th><th>Product Number</th><th>Color</th><th>Standard Cost</th><th>List Price</th><th>Date Modified</th></tr></thead>
+    <tbody>
+     @foreach(var Item in productlist)
+      {<tr><td>@Item.ProductID</td><td>@Item.Name</td><td>@Item.ProductNumber</td><td>@Item.Color</td><td>@Item.StandardCost</td><td>@Item.ListPrice</td><td>@Item.ModifiedDate</td></tr>}
+     </tbody>
+  </table>
+</body>
+</html>

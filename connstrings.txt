@@ -1,0 +1,1 @@
+Server=tcp:<alias>-east-sqlsvr.database.windows.net,1433;Database=<alias>-east-sqldb;User ID=<alias>admin;Password=<Password>;Trusted_Connection=False;Encrypt=False;Connection Timeout=30;
